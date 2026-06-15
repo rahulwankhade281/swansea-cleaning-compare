@@ -3,7 +3,89 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>CleanCompare Swansea — Find the Best Cleaning Quote</title>
+
+<!-- ═══════════════════════════════════════════════════
+     SEO META TAGS
+     HOW TO USE: These help Google understand your page.
+     Replace YOUR_DOMAIN with your real GitHub Pages URL
+     e.g. https://yourusername.github.io/swansea-cleaning-compare
+═══════════════════════════════════════════════════ -->
+
+<!-- Primary SEO -->
+<title>Compare Cleaning Services in Swansea | CleanCompare Swansea</title>
+<meta name="description" content="Compare 40+ trusted cleaning companies in Swansea. Find the best prices for domestic, commercial, end of tenancy, carpet, and window cleaning. Free quotes, real reviews, no obligation.">
+<meta name="keywords" content="cleaning services Swansea, Swansea cleaners, domestic cleaning Swansea, end of tenancy cleaning Swansea, commercial cleaning Swansea, carpet cleaning Swansea, window cleaning Swansea, compare cleaning quotes Swansea, cheap cleaners Swansea">
+<meta name="author" content="CleanCompare Swansea">
+<meta name="robots" content="index, follow">
+<link rel="canonical" href="https://rahulwankhade281.github.io/swansea-cleaning-compare/index.html">
+
+<!-- Open Graph (shows rich previews when shared on Facebook, LinkedIn, WhatsApp) -->
+<meta property="og:type" content="website">
+<meta property="og:title" content="Compare Cleaning Services in Swansea | CleanCompare Swansea">
+<meta property="og:description" content="Compare 40+ trusted local cleaners in Swansea. Best prices for domestic, end of tenancy, commercial & carpet cleaning. Free, no-obligation quotes.">
+<meta property="og:url" content="https://rahulwankhade281.github.io/swansea-cleaning-compare/index.html">
+<meta property="og:site_name" content="CleanCompare Swansea">
+<meta property="og:locale" content="en_GB">
+
+<!-- Twitter / X Card -->
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Compare Cleaning Services in Swansea | CleanCompare">
+<meta name="twitter:description" content="40+ Swansea cleaning companies compared by price, rating & area. Free quotes in 60 seconds.">
+
+<!-- Geo targeting — tells Google this site is for Swansea, Wales -->
+<meta name="geo.region" content="GB-WLS">
+<meta name="geo.placename" content="Swansea">
+<meta name="geo.position" content="51.6214;-3.9436">
+<meta name="ICBM" content="51.6214, -3.9436">
+
+<!-- Schema.org structured data (LocalBusiness JSON-LD) — helps Google show rich results -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebSite",
+  "name": "CleanCompare Swansea",
+  "url": "https://rahulwankhade281.github.io/swansea-cleaning-compare",
+  "description": "Compare cleaning service companies in Swansea, Wales. Find the best prices for domestic, commercial, end of tenancy, carpet, and window cleaning.",
+  "potentialAction": {
+    "@type": "SearchAction",
+    "target": "https://rahulwankhade281.github.io/swansea-cleaning-compare/?search={search_term_string}",
+    "query-input": "required name=search_term_string"
+  },
+  "areaServed": {
+    "@type": "City",
+    "name": "Swansea",
+    "containedIn": {
+      "@type": "Country",
+      "name": "Wales, United Kingdom"
+    }
+  }
+}
+</script>
+
+<!-- ═══════════════════════════════════════════════════
+     GOOGLE ANALYTICS 4 (GA4)
+     HOW TO USE:
+     1. Go to analytics.google.com
+     2. Create a free account → New Property → Web
+     3. Copy your Measurement ID (looks like G-XXXXXXXXXX)
+     4. Replace REPLACE_WITH_YOUR_GA4_ID below with it
+     5. Save and re-upload to GitHub Pages
+═══════════════════════════════════════════════════ -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-1VTSHVVJT9"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-1VTSHVVJT9');
+
+  /* Custom event tracking — these fire automatically when users interact */
+  function trackEvent(action, category, label) {
+    gtag('event', action, {
+      'event_category': category,
+      'event_label': label
+    });
+  }
+</script>
 <style>
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -193,7 +275,7 @@
 
 <nav>
   <div class="logo">Clean<span>Compare</span></div>
-  <button class="nav-cta" onclick="showPage('form')">Get a quote</button>
+  <button class="nav-cta" onclick="showPage('form');trackEvent('click','CTA','Nav - Get a Quote')">Get a quote</button>
 </nav>
 
 <!-- ══════════ PAGE 1: LANDING ══════════ -->
@@ -203,7 +285,7 @@
     <span class="hero-eyebrow">Swansea's No.1 Cleaning Comparison</span>
     <h1>Find the <em>cheapest</em> cleaning quote in Swansea — in seconds</h1>
     <p class="hero-sub">Compare prices from 40+ trusted local cleaners, read real reviews, and save up to 40% on your next clean.</p>
-    <button class="hero-btn" onclick="showPage('form')">Get a Quote &amp; Compare →</button>
+    <button class="hero-btn" onclick="showPage('form');trackEvent('click','CTA','Hero - Get a Quote')">Get a Quote &amp; Compare →</button>
     <p class="hero-trust">✓ Free &nbsp;&nbsp; ✓ No obligation &nbsp;&nbsp; ✓ Swansea cleaners only</p>
   </section>
 
@@ -299,7 +381,7 @@
       </tbody>
     </table>
     <div class="cta-center">
-      <button class="cta-big" onclick="showPage('form')">Get a Quote &amp; Compare →</button>
+      <button class="cta-big" onclick="showPage('form');trackEvent('click','CTA','Comparison Table - Get a Quote')">Get a Quote &amp; Compare →</button>
       <p class="cta-note">Free · No obligation · Takes 60 seconds</p>
     </div>
   </div>
@@ -349,7 +431,7 @@
         </div>
       </div>
 
-      <button class="submit-btn" onclick="submitForm()">Find & Compare Cleaners →</button>
+      <button class="submit-btn" onclick="submitForm();trackEvent('submit','Form','Quote Form Submitted')">Find & Compare Cleaners →</button>
     </div>
   </div>
 </div>
