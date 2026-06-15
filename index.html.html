@@ -1,0 +1,613 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CleanCompare Swansea — Find the Best Cleaning Quote</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --teal: #0F6E56;
+    --teal-light: #E1F5EE;
+    --teal-mid: #1D9E75;
+    --navy: #042C53;
+    --navy-mid: #185FA5;
+    --navy-light: #E6F1FB;
+    --amber: #EF9F27;
+    --amber-light: #FAEEDA;
+    --text: #1a1a1a;
+    --text-muted: #666;
+    --text-faint: #999;
+    --border: #e0e0e0;
+    --bg: #f7f8fa;
+    --white: #ffffff;
+    --radius: 10px;
+    --radius-lg: 14px;
+    --shadow: 0 2px 12px rgba(0,0,0,0.08);
+  }
+
+  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; color: var(--text); background: var(--white); line-height: 1.6; }
+
+  /* ───── NAV ───── */
+  nav { display: flex; align-items: center; justify-content: space-between; padding: 0 2rem; height: 60px; border-bottom: 1px solid var(--border); background: var(--white); position: sticky; top: 0; z-index: 50; }
+  .logo { font-size: 18px; font-weight: 700; color: var(--teal); letter-spacing: -0.5px; }
+  .logo span { color: var(--navy-mid); }
+  .nav-cta { padding: 8px 20px; background: var(--teal); color: #fff; border: none; border-radius: var(--radius); font-size: 14px; font-weight: 600; cursor: pointer; }
+  .nav-cta:hover { background: var(--teal-mid); }
+
+  /* ───── PAGE MANAGEMENT ───── */
+  .page { display: none; }
+  .page.active { display: block; }
+
+  /* ───── LANDING PAGE ───── */
+  .hero { background: linear-gradient(135deg, #042C53 0%, #185FA5 60%, #0F6E56 100%); color: #fff; padding: 5rem 2rem 4rem; text-align: center; }
+  .hero-eyebrow { display: inline-block; background: rgba(255,255,255,0.15); color: #fff; font-size: 12px; font-weight: 600; letter-spacing: 1px; text-transform: uppercase; padding: 5px 14px; border-radius: 20px; margin-bottom: 1.25rem; }
+  .hero h1 { font-size: clamp(2rem, 5vw, 3.2rem); font-weight: 800; line-height: 1.15; margin-bottom: 1rem; max-width: 680px; margin-left: auto; margin-right: auto; }
+  .hero h1 em { font-style: normal; color: #EF9F27; }
+  .hero-sub { font-size: 18px; opacity: 0.85; max-width: 520px; margin: 0 auto 2.5rem; }
+  .hero-btn { display: inline-block; background: var(--amber); color: var(--navy); padding: 16px 40px; border-radius: var(--radius); font-size: 17px; font-weight: 700; border: none; cursor: pointer; transition: transform .15s, box-shadow .15s; box-shadow: 0 4px 16px rgba(239,159,39,0.4); }
+  .hero-btn:hover { transform: translateY(-2px); box-shadow: 0 6px 24px rgba(239,159,39,0.5); }
+  .hero-trust { margin-top: 1.5rem; font-size: 13px; opacity: 0.65; }
+
+  /* ───── HOW IT WORKS ───── */
+  .section { padding: 4rem 2rem; max-width: 960px; margin: 0 auto; }
+  .section-label { font-size: 12px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; color: var(--teal); margin-bottom: .5rem; }
+  .section h2 { font-size: clamp(1.5rem, 3vw, 2rem); font-weight: 700; color: var(--navy); margin-bottom: .75rem; }
+  .section-intro { font-size: 16px; color: var(--text-muted); max-width: 580px; margin-bottom: 2.5rem; }
+
+  .steps { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1.5rem; }
+  .step { background: var(--white); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 1.5rem; }
+  .step-num { width: 38px; height: 38px; background: var(--teal-light); color: var(--teal); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 15px; font-weight: 700; margin-bottom: 1rem; }
+  .step h3 { font-size: 15px; font-weight: 700; color: var(--navy); margin-bottom: 6px; }
+  .step p { font-size: 14px; color: var(--text-muted); line-height: 1.55; }
+
+  /* ───── TIPS ───── */
+  .tips-bg { background: var(--bg); padding: 4rem 2rem; }
+  .tips-inner { max-width: 960px; margin: 0 auto; }
+  .tips-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 1.25rem; }
+  .tip-card { background: var(--white); border-radius: var(--radius-lg); padding: 1.25rem 1.5rem; border-left: 4px solid var(--teal); }
+  .tip-icon { font-size: 22px; margin-bottom: 8px; }
+  .tip-card h3 { font-size: 15px; font-weight: 700; color: var(--navy); margin-bottom: 5px; }
+  .tip-card p { font-size: 13px; color: var(--text-muted); line-height: 1.55; }
+
+  /* ───── COMPARISON PREVIEW ───── */
+  .compare-preview { max-width: 960px; margin: 0 auto; padding: 4rem 2rem; }
+  .mini-table { width: 100%; border-collapse: collapse; font-size: 14px; margin-bottom: 2rem; }
+  .mini-table th { background: var(--navy); color: #fff; padding: 10px 14px; text-align: left; font-weight: 600; }
+  .mini-table th:first-child { border-radius: 8px 0 0 0; }
+  .mini-table th:last-child { border-radius: 0 8px 0 0; }
+  .mini-table td { padding: 10px 14px; border-bottom: 1px solid var(--border); }
+  .mini-table tr:hover td { background: var(--teal-light); }
+  .badge-green { background: var(--teal-light); color: var(--teal); font-size: 11px; font-weight: 600; padding: 3px 8px; border-radius: 12px; }
+  .badge-amber { background: var(--amber-light); color: #854F0B; font-size: 11px; font-weight: 600; padding: 3px 8px; border-radius: 12px; }
+  .cta-center { text-align: center; }
+  .cta-big { display: inline-block; background: var(--teal); color: #fff; padding: 16px 48px; border-radius: var(--radius); font-size: 17px; font-weight: 700; border: none; cursor: pointer; transition: background .15s, transform .15s; }
+  .cta-big:hover { background: var(--teal-mid); transform: translateY(-1px); }
+  .cta-note { margin-top: 10px; font-size: 13px; color: var(--text-faint); }
+
+  /* ───── FORM PAGE ───── */
+  .form-page { min-height: calc(100vh - 60px); background: var(--bg); display: flex; align-items: center; justify-content: center; padding: 3rem 1.5rem; }
+  .form-card { background: var(--white); border-radius: var(--radius-lg); border: 1px solid var(--border); box-shadow: var(--shadow); max-width: 520px; width: 100%; padding: 2.5rem; }
+  .form-card h2 { font-size: 22px; font-weight: 700; color: var(--navy); margin-bottom: 6px; }
+  .form-card p { font-size: 14px; color: var(--text-muted); margin-bottom: 1.75rem; }
+  .form-group { margin-bottom: 1.25rem; }
+  .form-group label { display: block; font-size: 13px; font-weight: 600; color: var(--text); margin-bottom: 5px; }
+  .form-group label .req { color: #c00; margin-left: 2px; }
+  .form-group input, .form-group textarea { width: 100%; padding: 10px 14px; border: 1px solid var(--border); border-radius: var(--radius); font-size: 14px; color: var(--text); background: var(--white); transition: border-color .15s, box-shadow .15s; }
+  .form-group input:focus, .form-group textarea:focus { outline: none; border-color: var(--teal); box-shadow: 0 0 0 3px rgba(15,110,86,0.12); }
+  .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+  .submit-btn { width: 100%; padding: 13px; background: var(--teal); color: #fff; border: none; border-radius: var(--radius); font-size: 16px; font-weight: 700; cursor: pointer; margin-top: .5rem; transition: background .15s; }
+  .submit-btn:hover { background: var(--teal-mid); }
+  .back-link { display: inline-flex; align-items: center; gap: 5px; font-size: 13px; color: var(--text-muted); cursor: pointer; margin-bottom: 1.25rem; background: none; border: none; }
+  .back-link:hover { color: var(--teal); }
+  .error-msg { color: #c00; font-size: 12px; margin-top: 4px; display: none; }
+
+  /* ───── RESULTS PAGE ───── */
+  .results-hero { background: linear-gradient(135deg, var(--navy) 0%, var(--navy-mid) 100%); color: #fff; padding: 2.5rem 2rem 2rem; text-align: center; }
+  .results-hero h1 { font-size: 28px; font-weight: 700; margin-bottom: 6px; }
+  .results-hero p { font-size: 15px; opacity: 0.8; margin-bottom: 1.5rem; }
+  .search-row { display: flex; gap: 8px; max-width: 580px; margin: 0 auto; flex-wrap: wrap; justify-content: center; }
+  .search-row input, .search-row select { flex: 1; min-width: 140px; padding: 0 14px; height: 42px; border: none; border-radius: var(--radius); font-size: 14px; color: var(--text); background: var(--white); }
+  .search-row button { height: 42px; padding: 0 20px; border-radius: var(--radius); background: var(--amber); color: var(--navy); border: none; font-size: 14px; font-weight: 700; cursor: pointer; }
+  .search-row button:hover { background: #d88a18; }
+
+  .filter-bar { display: flex; align-items: center; gap: 10px; padding: 1rem 1.5rem; border-bottom: 1px solid var(--border); background: var(--white); flex-wrap: wrap; }
+  .filter-label { font-size: 13px; color: var(--text-muted); font-weight: 600; }
+  .pill-group { display: flex; gap: 6px; flex-wrap: wrap; }
+  .pill { padding: 5px 14px; border-radius: 20px; font-size: 12px; font-weight: 600; cursor: pointer; border: 1px solid var(--border); background: var(--white); color: var(--text-muted); transition: all .15s; }
+  .pill.active { background: var(--teal); color: #fff; border-color: var(--teal); }
+  .sort-sel { margin-left: auto; height: 34px; padding: 0 10px; font-size: 13px; border: 1px solid var(--border); border-radius: var(--radius); color: var(--text); background: var(--white); }
+
+  .results-meta { padding: .75rem 1.5rem; font-size: 13px; color: var(--text-muted); background: var(--bg); border-bottom: 1px solid var(--border); }
+
+  .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(290px, 1fr)); gap: 14px; padding: 1.5rem; background: var(--bg); }
+  .card { background: var(--white); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 1.25rem; transition: box-shadow .15s, border-color .15s; }
+  .card:hover { box-shadow: var(--shadow); border-color: #bbb; }
+  .card-top { display: flex; align-items: flex-start; gap: 10px; margin-bottom: 10px; }
+  .avatar { width: 44px; height: 44px; border-radius: var(--radius); display: flex; align-items: center; justify-content: center; font-size: 15px; font-weight: 700; flex-shrink: 0; }
+  .card-name { font-size: 15px; font-weight: 700; color: var(--navy); }
+  .card-meta { font-size: 12px; color: var(--text-muted); margin-top: 2px; }
+  .verified-badge { display: inline-flex; align-items: center; gap: 3px; font-size: 11px; color: var(--teal); font-weight: 600; margin-left: 5px; }
+  .stars-row { display: flex; align-items: center; gap: 5px; margin: 7px 0; }
+  .stars { color: var(--amber); font-size: 13px; letter-spacing: 1px; }
+  .rating-text { font-size: 13px; color: var(--text-muted); }
+  .badges { display: flex; flex-wrap: wrap; gap: 5px; margin-bottom: 10px; }
+  .tag { font-size: 11px; padding: 3px 8px; border-radius: 12px; background: var(--bg); color: var(--text-muted); border: 1px solid var(--border); }
+  .price-row { display: flex; align-items: baseline; gap: 4px; margin-bottom: 12px; }
+  .price { font-size: 22px; font-weight: 700; color: var(--navy); }
+  .price-unit { font-size: 12px; color: var(--text-muted); }
+  .card-actions { display: flex; gap: 8px; }
+  .btn-view { flex: 1; padding: 8px 12px; border-radius: var(--radius); background: var(--navy-light); color: var(--navy-mid); border: none; font-size: 13px; font-weight: 600; cursor: pointer; }
+  .btn-view:hover { background: #cde3f6; }
+  .btn-cmp { padding: 8px 12px; border-radius: var(--radius); background: var(--white); color: var(--text-muted); border: 1px solid var(--border); font-size: 13px; cursor: pointer; }
+  .btn-cmp:hover { border-color: var(--teal); color: var(--teal); }
+  .btn-cmp.added { background: var(--teal-light); color: var(--teal); border-color: var(--teal); font-weight: 600; }
+
+  /* modal */
+  .modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.45); z-index: 200; align-items: center; justify-content: center; padding: 1rem; }
+  .modal-overlay.open { display: flex; }
+  .modal-box { background: var(--white); border-radius: var(--radius-lg); max-width: 480px; width: 100%; padding: 2rem; max-height: 85vh; overflow-y: auto; position: relative; }
+  .modal-close { position: absolute; top: 1rem; right: 1rem; background: none; border: none; font-size: 22px; cursor: pointer; color: var(--text-muted); line-height: 1; }
+  .modal-close:hover { color: var(--text); }
+  .modal-av { width: 52px; height: 52px; border-radius: var(--radius); display: flex; align-items: center; justify-content: center; font-size: 18px; font-weight: 700; margin-bottom: 12px; }
+  .modal-title { font-size: 20px; font-weight: 700; color: var(--navy); margin-bottom: 4px; }
+  .modal-sub { font-size: 13px; color: var(--text-muted); margin-bottom: 12px; }
+  .modal-desc { font-size: 14px; color: var(--text-muted); line-height: 1.6; margin-bottom: 1rem; }
+  .modal-detail { display: flex; justify-content: space-between; padding: 9px 0; border-bottom: 1px solid var(--border); font-size: 14px; }
+  .modal-detail:last-of-type { border: none; }
+  .modal-dl { color: var(--text-muted); }
+  .modal-dv { font-weight: 600; color: var(--navy); }
+  .modal-actions { display: flex; gap: 8px; margin-top: 1.25rem; }
+  .modal-primary { flex: 1; padding: 10px; background: var(--teal); color: #fff; border: none; border-radius: var(--radius); font-size: 14px; font-weight: 700; cursor: pointer; }
+  .modal-primary:hover { background: var(--teal-mid); }
+  .modal-secondary { padding: 10px 16px; background: var(--white); color: var(--text-muted); border: 1px solid var(--border); border-radius: var(--radius); font-size: 14px; cursor: pointer; }
+  .modal-secondary:hover { border-color: var(--teal); color: var(--teal); }
+
+  /* compare bar */
+  .compare-bar { position: sticky; bottom: 0; background: var(--white); border-top: 1px solid var(--border); padding: .875rem 1.5rem; display: none; align-items: center; gap: 10px; flex-wrap: wrap; box-shadow: 0 -2px 12px rgba(0,0,0,0.07); }
+  .compare-bar.visible { display: flex; }
+  .cmp-chips { display: flex; gap: 6px; flex-wrap: wrap; flex: 1; }
+  .chip { padding: 5px 12px; border-radius: 20px; font-size: 12px; font-weight: 600; background: var(--teal-light); color: var(--teal); display: flex; align-items: center; gap: 5px; }
+  .chip-x { cursor: pointer; color: var(--teal); font-size: 15px; line-height: 1; }
+  .cmp-go { padding: 9px 20px; background: var(--teal); color: #fff; border: none; border-radius: var(--radius); font-size: 13px; font-weight: 700; cursor: pointer; }
+  .cmp-clear { padding: 9px 14px; background: var(--white); color: var(--text-muted); border: 1px solid var(--border); border-radius: var(--radius); font-size: 13px; cursor: pointer; }
+
+  /* footer */
+  footer { background: var(--navy); color: rgba(255,255,255,0.6); text-align: center; padding: 1.5rem; font-size: 13px; }
+  footer strong { color: #fff; }
+
+  /* toast */
+  .toast { position: fixed; bottom: 80px; left: 50%; transform: translateX(-50%); background: var(--teal); color: #fff; padding: 10px 22px; border-radius: 20px; font-size: 14px; font-weight: 600; opacity: 0; pointer-events: none; transition: opacity .3s; z-index: 300; }
+  .toast.show { opacity: 1; }
+
+  @media (max-width: 600px) {
+    .hero { padding: 3.5rem 1.25rem 3rem; }
+    .form-row { grid-template-columns: 1fr; }
+    .filter-bar { padding: .75rem 1rem; }
+    .grid { grid-template-columns: 1fr; padding: 1rem; }
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="logo">Clean<span>Compare</span></div>
+  <button class="nav-cta" onclick="showPage('form')">Get a quote</button>
+</nav>
+
+<!-- ══════════ PAGE 1: LANDING ══════════ -->
+<div id="page-landing" class="page active">
+
+  <section class="hero">
+    <span class="hero-eyebrow">Swansea's No.1 Cleaning Comparison</span>
+    <h1>Find the <em>cheapest</em> cleaning quote in Swansea — in seconds</h1>
+    <p class="hero-sub">Compare prices from 40+ trusted local cleaners, read real reviews, and save up to 40% on your next clean.</p>
+    <button class="hero-btn" onclick="showPage('form')">Get a Quote &amp; Compare →</button>
+    <p class="hero-trust">✓ Free &nbsp;&nbsp; ✓ No obligation &nbsp;&nbsp; ✓ Swansea cleaners only</p>
+  </section>
+
+  <div class="section">
+    <p class="section-label">How it works</p>
+    <h2>Three steps to a cheaper clean</h2>
+    <p class="section-intro">We do the legwork so you don't have to. Fill in one short form and we match you with the best-value local services.</p>
+    <div class="steps">
+      <div class="step">
+        <div class="step-num">1</div>
+        <h3>Tell us your needs</h3>
+        <p>Enter your address, postcode, and contact details. Takes under 60 seconds.</p>
+      </div>
+      <div class="step">
+        <div class="step-num">2</div>
+        <h3>We find your matches</h3>
+        <p>We instantly show you verified local cleaners with live pricing and real customer ratings.</p>
+      </div>
+      <div class="step">
+        <div class="step-num">3</div>
+        <h3>Compare and save</h3>
+        <p>Compare up to 3 services side by side, then pick the one that fits your budget and needs.</p>
+      </div>
+      <div class="step">
+        <div class="step-num">4</div>
+        <h3>Book with confidence</h3>
+        <p>Contact your chosen cleaner directly — no hidden fees, no middlemen, no nonsense.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="tips-bg">
+    <div class="tips-inner">
+      <p class="section-label">Money-saving tips</p>
+      <h2 style="font-size:1.75rem;font-weight:700;color:var(--navy);margin-bottom:.5rem">How to get a cheaper cleaning quote</h2>
+      <p style="color:var(--text-muted);font-size:15px;margin-bottom:1.75rem;max-width:540px">Small choices at booking time can save you a surprising amount every year.</p>
+      <div class="tips-grid">
+        <div class="tip-card">
+          <div class="tip-icon">📅</div>
+          <h3>Book mid-week</h3>
+          <p>Monday to Wednesday slots are in lower demand. Many Swansea cleaners offer up to 15% off mid-week bookings.</p>
+        </div>
+        <div class="tip-card">
+          <div class="tip-icon">🔁</div>
+          <h3>Go regular, not one-off</h3>
+          <p>A fortnightly or monthly contract almost always costs less per visit than a one-off clean. Ask about recurring rates.</p>
+        </div>
+        <div class="tip-card">
+          <div class="tip-icon">📦</div>
+          <h3>Bundle your services</h3>
+          <p>Need carpet cleaning and a domestic clean? Booking both with one company usually unlocks a bundled discount.</p>
+        </div>
+        <div class="tip-card">
+          <div class="tip-icon">🔑</div>
+          <h3>Offer key access</h3>
+          <p>Allowing your cleaner to hold a key removes the need for you to be home, which can lower your hourly rate by £2–4.</p>
+        </div>
+        <div class="tip-card">
+          <div class="tip-icon">📍</div>
+          <h3>Stay local</h3>
+          <p>Cleaners charge for travel time. Choosing a company based in your area (Sketty, Uplands, Mumbles) keeps costs down.</p>
+        </div>
+        <div class="tip-card">
+          <div class="tip-icon">⭐</div>
+          <h3>Compare at least 3 quotes</h3>
+          <p>Our data shows Swansea residents who compare 3+ quotes save an average of £28 per clean vs. booking the first result.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="compare-preview">
+    <p class="section-label">Live comparison</p>
+    <h2 style="font-size:1.75rem;font-weight:700;color:var(--navy);margin-bottom:.5rem">See what's available in Swansea right now</h2>
+    <p style="color:var(--text-muted);font-size:15px;margin-bottom:1.5rem;max-width:540px">A snapshot of current prices across service types — updated weekly.</p>
+    <table class="mini-table">
+      <thead>
+        <tr>
+          <th>Service type</th>
+          <th>Lowest price</th>
+          <th>Average price</th>
+          <th>Top rated</th>
+          <th>Availability</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td>Domestic cleaning</td><td>£14/hr</td><td>£17/hr</td><td>★ 4.9</td><td><span class="badge-green">High</span></td></tr>
+        <tr><td>End of tenancy</td><td>£89/job</td><td>£103/job</td><td>★ 4.8</td><td><span class="badge-green">High</span></td></tr>
+        <tr><td>Deep clean</td><td>£120/job</td><td>£155/job</td><td>★ 4.9</td><td><span class="badge-amber">Medium</span></td></tr>
+        <tr><td>Commercial</td><td>£18/hr</td><td>£21/hr</td><td>★ 4.8</td><td><span class="badge-green">High</span></td></tr>
+        <tr><td>Carpet cleaning</td><td>£45/room</td><td>£50/room</td><td>★ 4.8</td><td><span class="badge-green">High</span></td></tr>
+        <tr><td>Window cleaning</td><td>£30/job</td><td>£37/job</td><td>★ 4.7</td><td><span class="badge-amber">Medium</span></td></tr>
+      </tbody>
+    </table>
+    <div class="cta-center">
+      <button class="cta-big" onclick="showPage('form')">Get a Quote &amp; Compare →</button>
+      <p class="cta-note">Free · No obligation · Takes 60 seconds</p>
+    </div>
+  </div>
+
+  <footer>
+    <strong>CleanCompare Swansea</strong> &nbsp;·&nbsp; Helping Swansea residents find the best clean at the best price
+  </footer>
+</div>
+
+<!-- ══════════ PAGE 2: FORM ══════════ -->
+<div id="page-form" class="page">
+  <div class="form-page">
+    <div class="form-card">
+      <button class="back-link" onclick="showPage('landing')">← Back</button>
+      <h2>Get your free quotes</h2>
+      <p>Complete the form below and we will get back to you as soon as possible.</p>
+
+      <div class="form-group">
+        <label>Name<span class="req">*</span></label>
+        <input type="text" id="f-name" placeholder="Your full name">
+        <span class="error-msg" id="e-name">Please enter your name.</span>
+      </div>
+      <div class="form-group">
+        <label>Telephone number<span class="req">*</span></label>
+        <input type="tel" id="f-tel" placeholder="e.g. 07700 900000">
+        <span class="error-msg" id="e-tel">Please enter a telephone number.</span>
+      </div>
+      <div class="form-group">
+        <label>Email<span class="req">*</span></label>
+        <input type="email" id="f-email" placeholder="you@example.com">
+        <span class="error-msg" id="e-email">Please enter a valid email address.</span>
+      </div>
+      <div class="form-group">
+        <label>Address<span class="req">*</span></label>
+        <input type="text" id="f-address" placeholder="Street address">
+        <span class="error-msg" id="e-address">Please enter your address.</span>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label>Postcode<span class="req">*</span></label>
+          <input type="text" id="f-postcode" placeholder="e.g. SA1 1AA">
+          <span class="error-msg" id="e-postcode">Please enter your postcode.</span>
+        </div>
+        <div class="form-group">
+          <label>Service type</label>
+          <input type="text" id="f-service" placeholder="e.g. Domestic">
+        </div>
+      </div>
+
+      <button class="submit-btn" onclick="submitForm()">Find & Compare Cleaners →</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════ PAGE 3: RESULTS ══════════ -->
+<div id="page-results" class="page">
+
+  <div class="results-hero">
+    <h1>Swansea Cleaning Services</h1>
+    <p>Compare 40+ local cleaners across Swansea — prices, ratings, and availability — all in one place</p>
+    <div class="search-row">
+      <select id="areaFilter" onchange="filterAll()">
+        <option value="">All areas</option>
+        <option>Swansea City</option>
+        <option>Sketty</option>
+        <option>Uplands</option>
+        <option>Gowerton</option>
+        <option>Mumbles</option>
+        <option>Morriston</option>
+        <option>Llansamlet</option>
+        <option>Neath</option>
+        <option>Brynmill</option>
+        <option>Sandfields</option>
+        <option>Landore</option>
+        <option>Clydach</option>
+        <option>Skewen</option>
+        <option>Pontardawe</option>
+        <option>Killay</option>
+        <option>West Cross</option>
+        <option>Bishopston</option>
+        <option>Penlan</option>
+        <option>Townhill</option>
+        <option>Cwmrhydyceirw</option>
+      </select>
+      <input type="text" id="searchInput" placeholder="Search by name or service…" oninput="filterAll()">
+      <button onclick="filterAll()">Search</button>
+    </div>
+  </div>
+
+  <div class="filter-bar">
+    <span class="filter-label">Type:</span>
+    <div class="pill-group" id="typePills">
+      <div class="pill active" onclick="setPill(this,'')" >All</div>
+      <div class="pill" onclick="setPill(this,'Domestic')">Domestic</div>
+      <div class="pill" onclick="setPill(this,'Commercial')">Commercial</div>
+      <div class="pill" onclick="setPill(this,'End of Tenancy')">End of Tenancy</div>
+      <div class="pill" onclick="setPill(this,'Deep Clean')">Deep Clean</div>
+      <div class="pill" onclick="setPill(this,'Window')">Window</div>
+      <div class="pill" onclick="setPill(this,'Carpet')">Carpet</div>
+    </div>
+    <select class="sort-sel" id="sortSel" onchange="filterAll()">
+      <option value="rating">Sort: top rated</option>
+      <option value="price_asc">Sort: price low–high</option>
+      <option value="price_desc">Sort: price high–low</option>
+      <option value="reviews">Sort: most reviewed</option>
+    </select>
+  </div>
+
+  <div class="results-meta" id="resultsMeta"></div>
+  <div class="grid" id="grid"></div>
+
+  <div class="compare-bar" id="compareBar">
+    <strong style="font-size:13px;color:var(--text-muted)">Comparing:</strong>
+    <div class="cmp-chips" id="cmpChips"></div>
+    <button class="cmp-go" onclick="doCompare()">Compare selected →</button>
+    <button class="cmp-clear" onclick="clearCmp()">Clear</button>
+  </div>
+
+  <footer>
+    <strong>CleanCompare Swansea</strong> &nbsp;·&nbsp; Helping Swansea residents find the best clean at the best price
+  </footer>
+</div>
+
+<!-- MODAL -->
+<div class="modal-overlay" id="modal" onclick="if(event.target===this)closeModal()">
+  <div class="modal-box" id="modalBox"></div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+const SERVICES=[
+  /* ── DOMESTIC ── */
+  {id:1,name:"SparkleClean Swansea",type:"Domestic",area:"Sketty",rating:4.9,reviews:214,price:18,unit:"hr",verified:true,badges:["Eco-friendly","DBS checked","Free quote"],phone:"01792 100001",desc:"Family-run domestic cleaning service with over 10 years in Swansea. Flexible weekly, fortnightly, or one-off visits. All staff fully vetted and insured.",av:"SC",c:"#E1F5EE",ac:"#0F6E56"},
+  {id:7,name:"HomeShine Services",type:"Domestic",area:"Llansamlet",rating:4.3,reviews:62,price:15,unit:"hr",verified:false,badges:["DBS checked","Key holding","Flexible hours"],phone:"01792 100007",desc:"Affordable domestic cleaning for Llansamlet and surrounding areas. Fully referenced and trustworthy cleaners available mornings, afternoons, and evenings.",av:"HS",c:"#FBEAF0",ac:"#993556"},
+  {id:9,name:"GleamGo Domestic",type:"Domestic",area:"Swansea City",rating:4.7,reviews:175,price:17,unit:"hr",verified:true,badges:["Eco products","Insured","Online booking"],phone:"01792 100009",desc:"Easy online booking, eco-friendly products, and reliable cleaners across central Swansea. Recurring discount available after first clean.",av:"GG",c:"#E6F1FB",ac:"#0C447C"},
+  {id:13,name:"Mumbles Maids",type:"Domestic",area:"Mumbles",rating:4.8,reviews:130,price:19,unit:"hr",verified:true,badges:["Pet-friendly","DBS checked","Same-day"],phone:"01792 100013",desc:"Trusted domestic cleaners serving Mumbles and the Gower Peninsula. We bring all equipment and eco-friendly products — you just relax.",av:"MM",c:"#E1F5EE",ac:"#0F6E56"},
+  {id:14,name:"Brighter Homes Swansea",type:"Domestic",area:"Uplands",rating:4.6,reviews:98,price:16,unit:"hr",verified:true,badges:["Insured","References available","Weekly discount"],phone:"01792 100014",desc:"Reliable weekly and fortnightly domestic cleans across Uplands, Brynmill, and Sandfields. Established since 2011.",av:"BH",c:"#E6F1FB",ac:"#185FA5"},
+  {id:15,name:"Killay Clean Team",type:"Domestic",area:"Killay",rating:4.5,reviews:77,price:16,unit:"hr",verified:false,badges:["DBS checked","Key holding","Flexible"],phone:"01792 100015",desc:"Local cleaners covering Killay, Dunvant, and Sketty. Small team with big attention to detail. Happy to work around your schedule.",av:"KC",c:"#FAEEDA",ac:"#854F0B"},
+  {id:16,name:"Penlan Pristine",type:"Domestic",area:"Penlan",rating:4.2,reviews:41,price:14,unit:"hr",verified:false,badges:["Affordable","DBS checked","No contract"],phone:"01792 100016",desc:"Budget-friendly domestic cleaning in Penlan, Townhill, and Clase. No long contracts — pay as you go on your terms.",av:"PP",c:"#EAF3DE",ac:"#3B6D11"},
+  {id:17,name:"West Cross Cleaners",type:"Domestic",area:"West Cross",rating:4.7,reviews:111,price:18,unit:"hr",verified:true,badges:["Eco-friendly","Insured","6-month guarantee"],phone:"01792 100017",desc:"Friendly and thorough domestic cleaning on the Swansea Bay shoreline area. Regular clients receive a loyalty discount after 6 cleans.",av:"WC",c:"#EEEDFE",ac:"#534AB7"},
+  {id:18,name:"CleanNest Swansea",type:"Domestic",area:"Brynmill",rating:4.4,reviews:69,price:17,unit:"hr",verified:true,badges:["Student-friendly","Online booking","DBS checked"],phone:"01792 100018",desc:"Student and family domestic cleaning in Brynmill and Sandfields. Short notice bookings welcomed. Competitive hourly rates.",av:"CN",c:"#FCEBEB",ac:"#A32D2D"},
+  {id:19,name:"Cwmrhydyceirw Home Care",type:"Domestic",area:"Cwmrhydyceirw",rating:4.3,reviews:33,price:15,unit:"hr",verified:false,badges:["Local family","DBS checked","Flexible"],phone:"01792 100019",desc:"Small local cleaning team serving Cwmrhydyceirw and Morriston. Family-run, trustworthy, and always on time.",av:"CH",c:"#E1F5EE",ac:"#085041"},
+  /* ── COMMERCIAL ── */
+  {id:2,name:"Bay City Cleaners",type:"Commercial",area:"Swansea City",rating:4.7,reviews:189,price:22,unit:"hr",verified:true,badges:["Insured","Night shifts","Contract pricing"],phone:"01792 100002",desc:"Commercial and office cleaning for Swansea city businesses. Available 24/7 including weekends and bank holidays. Dedicated account manager provided.",av:"BC",c:"#E6F1FB",ac:"#185FA5"},
+  {id:8,name:"TotalClean Commercial",type:"Commercial",area:"Neath",rating:4.6,reviews:141,price:19,unit:"hr",verified:true,badges:["COSHH trained","Insured","Premises certificate"],phone:"01792 100008",desc:"Commercial cleaning for warehouses, offices, and retail premises across Neath and Swansea. Fully COSHH compliant with regular audits.",av:"TC",c:"#E1F5EE",ac:"#085041"},
+  {id:20,name:"Swansea Office Solutions",type:"Commercial",area:"Swansea City",rating:4.5,reviews:104,price:20,unit:"hr",verified:true,badges:["Daily contracts","Waste removal","Security cleared"],phone:"01792 100020",desc:"Office and co-working space cleaning throughout Swansea city centre. Flexible daily or weekly contracts with waste disposal included.",av:"SO",c:"#FAEEDA",ac:"#854F0B"},
+  {id:21,name:"Llansamlet Industrial Clean",type:"Commercial",area:"Llansamlet",rating:4.4,reviews:58,price:21,unit:"hr",verified:true,badges:["Industrial","High-level","24/7 availability"],phone:"01792 100021",desc:"Specialist industrial and factory cleaning serving the Llansamlet and Swansea Enterprise Park area. High-level cleaning and degreasing available.",av:"LI",c:"#EEEDFE",ac:"#534AB7"},
+  {id:22,name:"Prestige Contract Cleaning",type:"Commercial",area:"Sketty",rating:4.8,reviews:167,price:24,unit:"hr",verified:true,badges:["Award-winning","Green certified","BICSc trained"],phone:"01792 100022",desc:"Award-winning commercial cleaning company serving businesses across Swansea. BICSc-accredited staff and ISO-approved cleaning procedures.",av:"PC",c:"#E1F5EE",ac:"#0F6E56"},
+  {id:23,name:"Clydach Facility Services",type:"Commercial",area:"Clydach",rating:4.3,reviews:47,price:18,unit:"hr",verified:false,badges:["Insured","Flexible contract","COSHH trained"],phone:"01792 100023",desc:"Commercial and facility cleaning for businesses in Clydach, Ystalyfera, and the upper Swansea Valley. Competitive contract rates.",av:"CF",c:"#FBEAF0",ac:"#993556"},
+  {id:24,name:"Pontardawe Pro Clean",type:"Commercial",area:"Pontardawe",rating:4.4,reviews:62,price:19,unit:"hr",verified:true,badges:["Insured","Retail specialist","Night shifts"],phone:"01792 100024",desc:"Retail and commercial cleaning in Pontardawe and surrounding areas. Experienced in supermarket, restaurant, and pub cleaning.",av:"PP",c:"#E6F1FB",ac:"#0C447C"},
+  /* ── END OF TENANCY ── */
+  {id:3,name:"Fresh Start End of Tenancy",type:"End of Tenancy",area:"Uplands",rating:4.8,reviews:302,price:120,unit:"job",verified:true,badges:["Landlord approved","Bond-back guarantee","Same-day available"],phone:"01792 100003",desc:"Specialist end-of-tenancy cleaning trusted by Swansea landlords and letting agents. Bond-back guarantee on all jobs. Oven and fridge included.",av:"FS",c:"#FAECE7",ac:"#993C1D"},
+  {id:11,name:"ProEnd Tenancy Solutions",type:"End of Tenancy",area:"Swansea City",rating:4.6,reviews:220,price:99,unit:"job",verified:true,badges:["24hr turnaround","Oven included","Certificate issued"],phone:"01792 100011",desc:"Fast, affordable end-of-tenancy cleaning with full certification for landlords. Oven and fridge cleaning included in all packages.",av:"PE",c:"#FAECE7",ac:"#712B13"},
+  {id:25,name:"Gower Tenancy Clean",type:"End of Tenancy",area:"Mumbles",rating:4.7,reviews:143,price:110,unit:"job",verified:true,badges:["Bond-back guarantee","Agent approved","Flexible dates"],phone:"01792 100025",desc:"Trusted by Swansea letting agents for professional end-of-tenancy cleans. Full inventory clean including inside appliances. Weekend bookings available.",av:"GT",c:"#EAF3DE",ac:"#3B6D11"},
+  {id:26,name:"MoveOut Masters",type:"End of Tenancy",area:"Brynmill",rating:4.5,reviews:88,price:95,unit:"job",verified:false,badges:["Affordable","Oven clean","24hr quote"],phone:"01792 100026",desc:"Budget-friendly end-of-tenancy cleans in Brynmill, Sandfields, and Uplands. 24-hour online quote and flexible morning/evening appointments.",av:"MO",c:"#FCEBEB",ac:"#A32D2D"},
+  {id:27,name:"CheckOut Clean Swansea",type:"End of Tenancy",area:"Llansamlet",rating:4.6,reviews:115,price:105,unit:"job",verified:true,badges:["Landlord approved","Checklist provided","Fully insured"],phone:"01792 100027",desc:"End-of-tenancy specialists providing a full landlord checklist clean across Swansea and Neath. Fully insured with photo evidence provided.",av:"CC",c:"#E6F1FB",ac:"#185FA5"},
+  {id:28,name:"Skewen Tenancy Pros",type:"End of Tenancy",area:"Skewen",rating:4.4,reviews:55,price:89,unit:"job",verified:false,badges:["Same-day","Affordable","DBS checked"],phone:"01792 100028",desc:"Affordable and reliable end-of-tenancy cleaning in Skewen, Neath, and surrounding areas. Same-day bookings accepted subject to availability.",av:"ST",c:"#FAEEDA",ac:"#633806"},
+  /* ── DEEP CLEAN ── */
+  {id:5,name:"Deep Gleam Pro",type:"Deep Clean",area:"Morriston",rating:4.9,reviews:156,price:180,unit:"job",verified:true,badges:["Industrial equipment","Kitchen specialist","After renovation"],phone:"01792 100005",desc:"Heavy-duty deep cleaning for homes and commercial properties. Specialists in post-build and after-renovation cleans across Swansea.",av:"DG",c:"#EEEDFE",ac:"#534AB7"},
+  {id:10,name:"Swansea Steam & Clean",type:"Deep Clean",area:"Sketty",rating:4.4,reviews:53,price:140,unit:"job",verified:false,badges:["Steam technology","Pet-safe","Odour removal"],phone:"01792 100010",desc:"Steam cleaning specialists for deep cleaning without harsh chemicals. Ideal for families with children and pets. Allergen-free process.",av:"SS",c:"#FCEBEB",ac:"#A32D2D"},
+  {id:29,name:"Bishopston Deep Clean",type:"Deep Clean",area:"Bishopston",rating:4.7,reviews:79,price:160,unit:"job",verified:true,badges:["Eco-friendly","Mould treatment","Pet-safe"],phone:"01792 100029",desc:"Thorough deep cleaning services in Bishopston and Gower. Specialists in mould treatment, kitchen degrease, and bathroom restoration.",av:"BD",c:"#E1F5EE",ac:"#0F6E56"},
+  {id:30,name:"ThoroughClean Swansea",type:"Deep Clean",area:"Swansea City",rating:4.6,reviews:112,price:175,unit:"job",verified:true,badges:["Post-party","Hoarding clean","Industrial kit"],phone:"01792 100030",desc:"Deep cleaning for homes, rentals, and businesses in Swansea. Specialists in post-party clean-ups, hoarding situations, and heavily soiled properties.",av:"TC",c:"#FBEAF0",ac:"#712B13"},
+  {id:31,name:"Townhill Total Clean",type:"Deep Clean",area:"Townhill",rating:4.3,reviews:38,price:120,unit:"job",verified:false,badges:["Affordable","Same-day","No chemicals"],phone:"01792 100031",desc:"Affordable deep cleaning in Townhill, Penlan, and Blaenymaes. Steam and eco-chemical options available. Short notice cleans accepted.",av:"TT",c:"#EAF3DE",ac:"#3B6D11"},
+  {id:32,name:"Klean King Swansea",type:"Deep Clean",area:"Gowerton",rating:4.5,reviews:91,price:155,unit:"job",verified:true,badges:["Kitchen specialist","Post-build","Certified equipment"],phone:"01792 100032",desc:"Deep clean specialists serving Gowerton, Llanelli Road, and Gower. Certified extraction and steam equipment used on every job.",av:"KK",c:"#EEEDFE",ac:"#534AB7"},
+  /* ── WINDOW ── */
+  {id:4,name:"Crystal Windows Swansea",type:"Window",area:"Mumbles",rating:4.6,reviews:97,price:40,unit:"job",verified:false,badges:["Water-fed pole","Reach & wash","Monthly contracts"],phone:"01792 100004",desc:"Professional window cleaning across Swansea and Gower. Fully insured with modern water-fed pole systems. Conservatory and solar panel cleaning available.",av:"CW",c:"#FAEEDA",ac:"#854F0B"},
+  {id:12,name:"ShineSpark Windows",type:"Window",area:"Uplands",rating:4.4,reviews:44,price:35,unit:"job",verified:false,badges:["Frame clean included","Conservatory specialist"],phone:"01792 100012",desc:"Window cleaning across Uplands, Brynmill, and Sandfields. Conservatory roofs and UPVC frames cleaned as standard with every visit.",av:"SW",c:"#FAEEDA",ac:"#633806"},
+  {id:33,name:"Bay View Window Clean",type:"Window",area:"West Cross",rating:4.7,reviews:128,price:45,unit:"job",verified:true,badges:["Pure water system","Solar panels","Insured"],phone:"01792 100033",desc:"Premium window cleaning along the Swansea Bay seafront and West Cross. Pure water fed system for streak-free results. Solar panel cleaning specialists.",av:"BV",c:"#E6F1FB",ac:"#185FA5"},
+  {id:34,name:"Gower Glass & Frame",type:"Window",area:"Bishopston",rating:4.5,reviews:66,price:38,unit:"job",verified:true,badges:["Gutter clearing","Fascia clean","Monthly contracts"],phone:"01792 100034",desc:"Window and external cleaning in Bishopston, Pennard, and Gower. Gutter clearing and fascia cleaning also available. Fully insured and DBS checked.",av:"GG",c:"#E1F5EE",ac:"#0F6E56"},
+  {id:35,name:"ClearView Swansea",type:"Window",area:"Swansea City",rating:4.3,reviews:52,price:30,unit:"job",verified:false,badges:["Commercial windows","Reach & wash","Quick drying"],phone:"01792 100035",desc:"Commercial and residential window cleaning in central Swansea. High-reach equipment for multi-storey buildings. Quick-dry guarantee.",av:"CV",c:"#FCEBEB",ac:"#A32D2D"},
+  {id:36,name:"Spotless Panes Neath",type:"Window",area:"Neath",rating:4.4,reviews:74,price:32,unit:"job",verified:true,badges:["Water-fed pole","Frame wipe","Monthly round"],phone:"01792 100036",desc:"Residential and commercial window cleaning in Neath and Skewen. Regular monthly rounds with online account management to track your next clean.",av:"SP",c:"#FAEEDA",ac:"#854F0B"},
+  /* ── CARPET ── */
+  {id:6,name:"CarpetCare Swansea",type:"Carpet",area:"Gowerton",rating:4.5,reviews:88,price:50,unit:"room",verified:true,badges:["Hot water extraction","Allergen removal","Same-day dry"],phone:"01792 100006",desc:"Carpet and upholstery cleaning using professional hot water extraction. Removes stains, odours, and allergens. Same-day drying guaranteed.",av:"CC",c:"#EAF3DE",ac:"#3B6D11"},
+  {id:37,name:"Bay Carpet & Upholstery",type:"Carpet",area:"Swansea City",rating:4.8,reviews:192,price:55,unit:"room",verified:true,badges:["Pet stain specialist","DBS checked","Scotchgard treatment"],phone:"01792 100037",desc:"Specialist carpet and sofa cleaning across Swansea. Pet stain and odour removal experts. Optional Scotchgard protective treatment available.",av:"BU",c:"#E1F5EE",ac:"#085041"},
+  {id:38,name:"FibreFlush Sketty",type:"Carpet",area:"Sketty",rating:4.6,reviews:103,price:48,unit:"room",verified:true,badges:["Commercial carpets","Low moisture","24hr dry"],phone:"01792 100038",desc:"Low-moisture carpet cleaning for faster drying in homes and offices. Trusted by Swansea estate agents for between-tenancy carpet refreshes.",av:"FF",c:"#EEEDFE",ac:"#534AB7"},
+  {id:39,name:"Swansea Rug & Carpet Co",type:"Carpet",area:"Morriston",rating:4.4,reviews:67,price:45,unit:"room",verified:false,badges:["Rug specialist","Eco detergents","Stain guarantee"],phone:"01792 100039",desc:"Carpet and area rug cleaning specialists in Morriston and Llansamlet. Eco detergents used throughout. Stain-removal guarantee on all bookings.",av:"SR",c:"#FBEAF0",ac:"#993556"},
+  {id:40,name:"PileUp Carpet Cleaners",type:"Carpet",area:"Mumbles",rating:4.7,reviews:84,price:52,unit:"room",verified:true,badges:["Hot extraction","Quick dry","Allergen tested"],phone:"01792 100040",desc:"Professional carpet cleaning in Mumbles and West Swansea. Hot water extraction method removes 98% of allergens. Results tested and certified.",av:"PU",c:"#E6F1FB",ac:"#0C447C"}
+];
+
+let activeType="", cmpList=[];
+
+function showPage(name){
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.getElementById('page-'+name).classList.add('active');
+  window.scrollTo(0,0);
+  if(name==='results') filterAll();
+}
+
+function setPill(el,val){
+  document.querySelectorAll('#typePills .pill').forEach(p=>p.classList.remove('active'));
+  el.classList.add('active');
+  activeType=val;
+  filterAll();
+}
+
+function starsHtml(r){let s='';for(let i=1;i<=5;i++)s+=i<=r?'★':'☆';return s;}
+
+function filterAll(){
+  const q=(document.getElementById('searchInput')||{value:''}).value.toLowerCase();
+  const area=(document.getElementById('areaFilter')||{value:''}).value;
+  const sort=(document.getElementById('sortSel')||{value:'rating'}).value;
+  let list=SERVICES.filter(s=>{
+    const mq=!q||s.name.toLowerCase().includes(q)||s.type.toLowerCase().includes(q)||s.badges.some(b=>b.toLowerCase().includes(q));
+    const ma=!area||s.area===area;
+    const mt=!activeType||s.type===activeType;
+    return mq&&ma&&mt;
+  });
+  if(sort==='rating')list.sort((a,b)=>b.rating-a.rating);
+  else if(sort==='price_asc')list.sort((a,b)=>a.price-b.price);
+  else if(sort==='price_desc')list.sort((a,b)=>b.price-a.price);
+  else if(sort==='reviews')list.sort((a,b)=>b.reviews-a.reviews);
+  renderGrid(list);
+}
+
+function renderGrid(list){
+  const m=document.getElementById('resultsMeta');
+  if(m)m.textContent=list.length+' service'+(list.length!==1?'s':'')+' found';
+  const g=document.getElementById('grid');
+  if(!g)return;
+  if(!list.length){g.innerHTML='<div style="grid-column:1/-1;text-align:center;padding:3rem;color:var(--text-muted)">No services match your filters.</div>';return;}
+  g.innerHTML=list.map(s=>{
+    const inC=cmpList.includes(s.id);
+    return`<div class="card">
+      <div class="card-top">
+        <div class="avatar" style="background:${s.c};color:${s.ac}">${s.av}</div>
+        <div>
+          <div class="card-name">${s.name}${s.verified?'<span class="verified-badge">✓ Verified</span>':''}</div>
+          <div class="card-meta">${s.type} · ${s.area}</div>
+        </div>
+      </div>
+      <div class="stars-row"><span class="stars">${starsHtml(Math.round(s.rating))}</span><span class="rating-text">${s.rating} (${s.reviews} reviews)</span></div>
+      <div class="badges">${s.badges.map(b=>`<span class="tag">${b}</span>`).join('')}</div>
+      <div class="price-row"><span class="price">£${s.price}</span><span class="price-unit">per ${s.unit}</span></div>
+      <div class="card-actions">
+        <button class="btn-view" onclick="openModal(${s.id})">View details</button>
+        <button class="btn-cmp${inC?' added':''}" id="cb${s.id}" onclick="toggleCmp(${s.id})">${inC?'✓ Added':'+ Compare'}</button>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function toggleCmp(id){
+  const idx=cmpList.indexOf(id);
+  if(idx===-1){if(cmpList.length>=3){showToast('You can compare up to 3 at once.');return;}cmpList.push(id);}
+  else cmpList.splice(idx,1);
+  updateCmpBar();filterAll();
+}
+
+function updateCmpBar(){
+  const bar=document.getElementById('compareBar');
+  const chips=document.getElementById('cmpChips');
+  if(!cmpList.length){bar.classList.remove('visible');}
+  else{bar.classList.add('visible');chips.innerHTML=cmpList.map(id=>{const s=SERVICES.find(x=>x.id===id);return`<div class="chip">${s.name}<span class="chip-x" onclick="toggleCmp(${id})">×</span></div>`;}).join('');}
+}
+
+function clearCmp(){cmpList=[];updateCmpBar();filterAll();}
+
+function doCompare(){
+  const names=cmpList.map(id=>SERVICES.find(x=>x.id===id).name).join(', ');
+  showToast('Comparing: '+names);
+}
+
+function openModal(id){
+  const s=SERVICES.find(x=>x.id===id);
+  document.getElementById('modalBox').innerHTML=`
+    <button class="modal-close" onclick="closeModal()">×</button>
+    <div class="modal-av" style="background:${s.c};color:${s.ac}">${s.av}</div>
+    <div class="modal-title">${s.name}${s.verified?' ✓':''}</div>
+    <div class="modal-sub">${s.type} · ${s.area}</div>
+    <p class="modal-desc">${s.desc}</p>
+    <div class="modal-detail"><span class="modal-dl">Price</span><span class="modal-dv">£${s.price} per ${s.unit}</span></div>
+    <div class="modal-detail"><span class="modal-dl">Rating</span><span class="modal-dv">${s.rating} ★ · ${s.reviews} reviews</span></div>
+    <div class="modal-detail"><span class="modal-dl">Area</span><span class="modal-dv">${s.area}, Swansea</span></div>
+    <div class="modal-detail"><span class="modal-dl">Verified</span><span class="modal-dv">${s.verified?'Yes ✓':'Not yet'}</span></div>
+    <div class="modal-detail"><span class="modal-dl">Phone</span><span class="modal-dv" style="color:var(--teal)">${s.phone}</span></div>
+    <div class="modal-actions">
+      <button class="modal-primary" onclick="closeModal();showToast('Quote request sent for ${s.name}!')">Request a quote</button>
+      <button class="modal-secondary" onclick="toggleCmp(${s.id});closeModal()">+ Compare</button>
+    </div>`;
+  document.getElementById('modal').classList.add('open');
+}
+
+function closeModal(){document.getElementById('modal').classList.remove('open');}
+
+function showToast(msg){
+  const t=document.getElementById('toast');
+  t.textContent=msg;t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'),2500);
+}
+
+function submitForm(){
+  let ok=true;
+  const fields=[
+    {id:'f-name',err:'e-name',check:v=>v.trim().length>1},
+    {id:'f-tel',err:'e-tel',check:v=>v.trim().length>6},
+    {id:'f-email',err:'e-email',check:v=>/\S+@\S+\.\S+/.test(v)},
+    {id:'f-address',err:'e-address',check:v=>v.trim().length>3},
+    {id:'f-postcode',err:'e-postcode',check:v=>v.trim().length>2}
+  ];
+  fields.forEach(f=>{
+    const el=document.getElementById(f.id);
+    const err=document.getElementById(f.err);
+    if(!f.check(el.value)){err.style.display='block';el.style.borderColor='#c00';ok=false;}
+    else{err.style.display='none';el.style.borderColor='';}
+  });
+  if(ok) showPage('results');
+}
+</script>
+</body>
+</html>
